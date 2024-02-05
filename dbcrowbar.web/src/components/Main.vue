@@ -2,59 +2,20 @@
 import Layout from './Layout.vue';
 import Editor from './Editor.vue';
 import Database from '../Database.js';
+import sessionRepository from '../sessionRepository.js';
+import xhr from '../xhrutil.js';
 
 const endpoint = import.meta.env.VITE_API_ENDPOINT;
 
-const sessionRepository = {};
-
 const extensionRepository = {};
-
-const postSessionClose = (sessionId) => {
-  let entry = sessionRepository[sessionId];
-  clearInterval(entry.heartbeatInterval);
-  delete sessionRepository[sessionId];
-  entry = null;
-};
-
-const requestSync = (url, method, body = null) => {
-  const request = new XMLHttpRequest();
-  request.open(method, url, false);
-  if(body != null) {
-    request.setRequestHeader('Content-Type', 'application/json');
-    request.send(JSON.stringify(body));
-  }
-  
-  if (request.status === 200) {
-    return JSON.parse(request.responseText);
-  } else {
-    throw new Error("Error on request.");
-  }
-};
-
-const sendHeartbeat = (sessionId) => {
-  fetch(`${endpoint}/Database/session/heartbeat`, {
-    method:"POST", 
-    body:JSON.stringify({
-      SessionId: sessionId
-    }), 
-    headers: {"Content-Type": "application/json"} 
-  })
-    .then(res => res.json())
-    .then(json => json);
-};
 
 let implementClient = (window) => {
   window.connect = function(source, opt = {}) {
-    let res = requestSync(`${endpoint}/Database/session/connect`, 'POST', { Source: source });
+    let res = xhr.requestSync(`${endpoint}/Database/session/connect`, 'POST', { Source: source });
     let db = new Database(res.SessionId);
     let sessionId = res.SessionId;
 
-    sessionRepository[res.SessionId] = {
-      instanceDatabase: db,
-      heartbeatInterval: setInterval(() => {
-        sendHeartbeat(sessionId);
-      }, 1000 * 10),
-    };
+    sessionRepository.registerSession(res.SessionId, db);
 
     return db;
   };

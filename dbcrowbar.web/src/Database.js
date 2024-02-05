@@ -1,4 +1,6 @@
 
+import sessionRepository from './sessionRepository.js';
+
 const endpoint = import.meta.env.VITE_API_ENDPOINT;
 
 const requestSync = (url, method, body = null) => {
@@ -44,7 +46,7 @@ export default class Database {
     let res = requestSync(`${endpoint}/Database/session/close`, 'POST', { 
       SessionId: this.#sessionId,
     });
-    postSessionClose(this.#sessionId);
+    sessionRepository.unregisterSession(this.#sessionId);
     return true;
   }
 
