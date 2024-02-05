@@ -44,7 +44,7 @@ export default {
     const lang = this.lang || "text";
     const theme = this.theme || "github";
 
-    this.editor = window.ace.edit(this.editorId);
+    this.editor = window.ace.edit(this.editorId, { useWorker: false });
     
     this.editor.setOptions({
       // enableBasicAutocompletion: true,

@@ -27,8 +27,8 @@ namespace dbcrowbar.webapi.Services
         {
             if (/* Execution condition */true)
             {
-                Console.WriteLine("Running session sweep...");
-                Console.WriteLine("Currently " + DatabaseController.Connections.Count().ToString() + " Session exists");
+                // Console.WriteLine("Running session sweep...");
+                // Console.WriteLine("Currently " + DatabaseController.Connections.Count().ToString() + " Session exists");
 
                 var now = DateTime.Now;
                 var keys = DatabaseController.Connections.Keys;
@@ -61,7 +61,7 @@ namespace dbcrowbar.webapi.Services
                     }
                 }
 
-                Console.WriteLine("Session sweep complete.");
+                // Console.WriteLine("Session sweep complete.");
             }
 
             return Task.FromResult("Done");

@@ -1,6 +1,7 @@
 <script>
 import Layout from './Layout.vue';
 import Editor from './Editor.vue';
+import Database from '../Database.js';
 
 const endpoint = import.meta.env.VITE_API_ENDPOINT;
 
@@ -41,43 +42,6 @@ const sendHeartbeat = (sessionId) => {
     .then(res => res.json())
     .then(json => json);
 };
-
-class Database {
-  #sessionId = null;
-
-  constructor(sessionId) {
-    this.#sessionId = sessionId;
-    this.ext = {};
-  }
-
-  #addExtensionImpl(extension) {
-    this.ext[extension.name] = extension.implement(this);
-  }
-
-  addExtension(extension) {
-    this.#addExtensionImpl(extension);
-  }
-
-  $(query) {
-    let res = requestSync(`${endpoint}/Database/query`, 'POST', { 
-      SessionId: this.#sessionId,
-      Query: query,
-    });
-    return res;
-  }
-
-  #closeSession() {
-    let res = requestSync(`${endpoint}/Database/session/close`, 'POST', { 
-      SessionId: this.#sessionId,
-    });
-    postSessionClose(this.#sessionId);
-    return true;
-  }
-
-  close() {
-    return this.#closeSession();
-  }
-}
 
 let implementClient = (window) => {
   window.connect = function(source, opt = {}) {
