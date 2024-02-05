@@ -2,10 +2,11 @@
 import Layout from './Layout.vue';
 import Editor from './Editor.vue';
 
-console.log(import.meta.env.VITE_API_ENDPOINT);
 const endpoint = import.meta.env.VITE_API_ENDPOINT;
 
 const sessionRepository = {};
+
+const extensionRepository = {};
 
 const postSessionClose = (sessionId) => {
   let entry = sessionRepository[sessionId];
@@ -46,6 +47,15 @@ class Database {
 
   constructor(sessionId) {
     this.#sessionId = sessionId;
+    this.ext = {};
+  }
+
+  #addExtensionImpl(extension) {
+    this.ext[extension.name] = extension.implement(this);
+  }
+
+  addExtension(extension) {
+    this.#addExtensionImpl(extension);
   }
 
   $(query) {
