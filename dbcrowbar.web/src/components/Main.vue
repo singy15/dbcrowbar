@@ -295,7 +295,7 @@ export default {
           <!-- tab page 1 -->
           <Layout layout-id="layout-content1"
             border-width="4"
-            size-east="300"
+            size-east="20"
             class-north="p-3" class-south="p-3" class-east="p-5" class-west="p-3" class-center="p-3"
             style-east="overflow:auto"
             disable-west="true" disable-north="true" disable-south="true"
@@ -319,7 +319,7 @@ export default {
             <template v-slot:center>
               <Layout layout-id="layout-content1-inner1"
                 border-width="4"
-                size-north="32" size-south="150"
+                size-north="32" size-south="100"
                 class-south="p-3" class-east="p-3" class-west="p-3" class-center="p-3"
                 disable-west="true" disable-east="true" 
                 style-south="overflow:auto; font-size:0.9em; background-color:#FAFAFA;">
