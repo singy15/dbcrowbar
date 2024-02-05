@@ -100,7 +100,7 @@ namespace dbcrowbar.webapi.Controllers
         {
             using (var cmd = tx.Connection.CreateCommand())
             {
-                cmd.CommandTimeout = 1;
+                cmd.CommandTimeout = 60 * 3;
                 cmd.CommandText = sql;
                 var reader = cmd.ExecuteReader();
                 var dt = new DataTable();
