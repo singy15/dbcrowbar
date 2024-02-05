@@ -56,11 +56,7 @@ export default {
       watches: {}
     }
   },
-  watch: {
-    logEntries() {
-      this.$nextTick(() => { this.$refs.out.scrollIntoView({ block: "end", inline: "nearest" }); });
-    }
-  },
+  watch: { },
   methods: {
     msg(text) {
       console.log(text);
@@ -83,6 +79,8 @@ export default {
 
       this.logEntries.push(
         `<span>${prefix + ((isObject(msg))? JSON.stringify(msg) : msg)}</span>`);
+
+      this.$nextTick(() => { this.$refs.out.scrollIntoView({ block: "end", inline: "nearest" }); });
     },
     writeError(msg, prefix = "") {
       let isObject = (value) => {
