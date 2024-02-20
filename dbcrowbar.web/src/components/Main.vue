@@ -104,8 +104,9 @@ export default {
 
       implementClient(iframe.contentWindow);
 
-      iframe.contentWindow.consoleListener = (msg) => {
-        this.writeLog(msg);
+      var self = this;
+      iframe.contentWindow.consoleListener = function(arg) {
+        self.writeLog(arg);
       };
 
       iframe.contentWindow.querySync = function(sql) {
@@ -135,7 +136,7 @@ export default {
 
       iframe.contentWindow.eval(`
         window.console.__log = console.log;
-        window.console.log = (arg) => { console.__log(arg); consoleListener(arg); }
+        window.console.log = function() { console.__log(...arguments); consoleListener(...arguments); }
         `);
     },
     evaluateJavaScript(text) {
