@@ -18,6 +18,16 @@ const requestSync = (url, method, body = null) => {
   }
 };
 
+const requestAsync = (url, method, bodyObj = null) => {
+  const body = JSON.stringify(bodyObj);
+  const headers = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  };
+  return fetch(url, {method, headers, body})
+    .catch(e => { throw e });
+};
+
 export default class Database {
   #sessionId = null;
 
@@ -40,6 +50,13 @@ export default class Database {
       Query: query,
     });
     return res;
+  }
+
+  $$(query) {
+    return requestAsync(`${endpoint}/Database/query`, 'POST', { 
+      SessionId: this.#sessionId,
+      Query: query,
+    });
   }
 
   #closeSession() {
