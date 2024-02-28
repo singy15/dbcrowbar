@@ -52,11 +52,15 @@ export default class Database {
     return res;
   }
 
-  $$(query) {
-    return requestAsync(`${endpoint}/Database/query`, 'POST', { 
+  $$(query, raw = false) {
+    let p = requestAsync(`${endpoint}/Database/query`, 'POST', { 
       SessionId: this.#sessionId,
       Query: query,
     });
+    if(!raw) {
+      p = p.then(res => res.json());
+    }
+    return p;
   }
 
   #closeSession() {
