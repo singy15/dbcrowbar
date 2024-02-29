@@ -18,14 +18,13 @@ const requestSync = (url, method, body = null) => {
   }
 };
 
-const requestAsync = (url, method, bodyObj = null) => {
+const requestAsync = async (url, method, bodyObj = null) => {
   const body = JSON.stringify(bodyObj);
   const headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   };
-  return fetch(url, {method, headers, body})
-    .catch(e => { throw e });
+  return fetch(url, {method, headers, body});
 };
 
 export default class Database {
@@ -52,13 +51,13 @@ export default class Database {
     return res;
   }
 
-  $$(query, raw = false) {
-    let p = requestAsync(`${endpoint}/Database/query`, 'POST', { 
+  async $$(query, raw = false) {
+    let p = await requestAsync(`${endpoint}/Database/query`, 'POST', { 
       SessionId: this.#sessionId,
       Query: query,
     });
     if(!raw) {
-      p = p.then(res => res.json());
+      p = JSON.parse(await p.json());
     }
     return p;
   }
@@ -71,8 +70,20 @@ export default class Database {
     return true;
   }
 
+  async #$closeSession() {
+    let res = await requestAsync(`${endpoint}/Database/session/close`, 'POST', { 
+      SessionId: this.#sessionId,
+    });
+    sessionRepository.unregisterSession(this.#sessionId);
+    return true;
+  }
+
   close() {
     return this.#closeSession();
+  }
+
+  async $close() {
+    return await this.#closeSession();
   }
 };
 
