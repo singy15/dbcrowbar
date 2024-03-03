@@ -14,7 +14,17 @@ const requestSync = (url, method, body = null) => {
   }
 };
 
+const requestAsync = async (url, method, bodyObj = null) => {
+  const body = JSON.stringify(bodyObj);
+  const headers = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  };
+  return fetch(url, {method, headers, body});
+};
+
 export default {
-  requestSync: requestSync
+  requestSync: requestSync,
+  requestAsync: requestAsync,
 };
 

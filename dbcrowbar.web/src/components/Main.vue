@@ -19,6 +19,18 @@ let implementClient = (window) => {
 
     return db;
   };
+
+  window.$connect = async function(source, opt = {}) {
+    console.log(source);
+    let fet = await xhr.requestAsync(`${endpoint}/Database/session/connect`, 'POST', { Source: source });
+    let res = JSON.parse(await fet.json());
+    let db = new Database(res.SessionId);
+    let sessionId = res.SessionId;
+
+    sessionRepository.registerSession(res.SessionId, db);
+
+    return db;
+  };
 };
 
 
