@@ -83,7 +83,7 @@ export default class Database {
   }
 
   async $close() {
-    return await this.#closeSession();
+    return await this.#$closeSession();
   }
 };
 
