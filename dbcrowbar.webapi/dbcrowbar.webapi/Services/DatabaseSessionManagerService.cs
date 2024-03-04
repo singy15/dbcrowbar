@@ -12,7 +12,7 @@ namespace dbcrowbar.webapi.Services
     {
         private const int intervalMillisec = /* 1 second */1000 * /* times multiply */10;
 
-        private const int removeThresholdMillisec = /* 1 second */1000 * /* times multiply */60;
+        private const int removeThresholdMillisec = /* 1 second */1000 * /* times multiply */180;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
