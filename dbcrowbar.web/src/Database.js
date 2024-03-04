@@ -29,10 +29,16 @@ const requestAsync = async (url, method, bodyObj = null) => {
 
 export default class Database {
   #sessionId = null;
+  #source = null;
 
-  constructor(sessionId) {
+  constructor(sessionId, source) {
     this.#sessionId = sessionId;
+    this.#source = source;
     this.ext = {};
+  }
+
+  source() {
+    return this.#source;
   }
 
   #addExtensionImpl(extension) {
