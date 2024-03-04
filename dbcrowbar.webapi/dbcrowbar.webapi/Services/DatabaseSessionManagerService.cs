@@ -54,7 +54,8 @@ namespace dbcrowbar.webapi.Services
                         Console.WriteLine("Success.");
 
                         Console.WriteLine("Removing session...");
-                        DatabaseController.Connections.Remove(key);
+                        DatabaseSession removed;
+                        DatabaseController.Connections.TryRemove(key, out removed);
                         Console.WriteLine("Success.");
 
                         Console.WriteLine("Sweep procedure for session [" + key + "] complete.");

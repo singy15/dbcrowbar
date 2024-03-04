@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Cors;
 using System.Data.Common;
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace dbcrowbar.webapi.Controllers
 {
@@ -55,7 +56,7 @@ namespace dbcrowbar.webapi.Controllers
 
         private IConfiguration _configuration;
 
-        public static Dictionary<string, DatabaseSession> Connections = new Dictionary<string, DatabaseSession>();
+        public static ConcurrentDictionary<string, DatabaseSession> Connections = new ConcurrentDictionary<string, DatabaseSession>();
 
         public DatabaseController(ILogger<DatabaseController> logger, IConfiguration configuration)
         {
@@ -120,7 +121,7 @@ namespace dbcrowbar.webapi.Controllers
 
             var sessionId = Guid.NewGuid().ToString();
 
-            Connections.Add(sessionId, new DatabaseSession()
+            Connections.TryAdd(sessionId, new DatabaseSession()
             {
                 Connection = conn,
                 SessionId = sessionId,
@@ -160,7 +161,8 @@ namespace dbcrowbar.webapi.Controllers
                 cinfo.Transaction.Rollback();
             }
             cinfo.Connection.Close();
-            Connections.Remove(request.SessionId);
+            DatabaseSession removed;
+            Connections.TryRemove(request.SessionId, out removed);
 
             return JsonConvert.SerializeObject(new { Success = true });
         }
