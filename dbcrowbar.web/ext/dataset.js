@@ -70,18 +70,18 @@ var dataset = {
         await ctas(sourceSchema, sourceTable, 
           destinationSchema, destTable, subdb);
         await subdb.$close();
-        log(`- ${destTable} created.`);
+        // log(`- ${destTable} created.`);
       }
       
       let curSchema = await currentSchema();
       let srcSchema = opt.sourceSchema || curSchema;
       let destSchema = opt.destinationSchema || curSchema;
       
-      log(`creating...`);
+      // log(`creating...`);
       let ps = tables.map(table => create1(datasource, dataset, srcSchema, table, 
           destSchema, tablename(dataset, table)));
       await Promise.all(ps);
-      log(`done.`);
+      // log(`done.`);
     }
     self.create = create;
     
@@ -90,18 +90,18 @@ var dataset = {
         let subdb = await $connect(datasource);
         await subdb.$$(`DROP TABLE ${sourceSchema}.${sourceTable}`);
         await subdb.$close();
-        log(`- ${sourceTable} purged.`);
+        // log(`- ${sourceTable} purged.`);
       }
       
       let curSchema = await currentSchema();
       let srcSchema = opt.sourceSchema || curSchema;
       
-      log(`purging...`);
+      // log(`purging...`);
       let ds = await find(dataset, { schema: srcSchema });
       let ps = ds.map(d => purge1(datasource, d.dataset, 
         d.sourceSchema, d.sourceTable));
       await Promise.all(ps);
-      log(`done.`);
+      // log(`done.`);
     }
     self.purge = purge;
     
@@ -113,19 +113,19 @@ var dataset = {
         await subdb.$$(`INSERT INTO ${destinationSchema}.${destinationTable}`
           + ` SELECT * FROM ${sourceSchema}.${sourceTable}`);
         await subdb.$close();
-        log(`- ${destinationTable} restored.`);
+        // log(`- ${destinationTable} restored.`);
       }
       
       let curSchema = await currentSchema();
       let srcSchema = opt.sourceSchema || curSchema;
       let destSchema = opt.destinationSchema || curSchema;
       
-      log(`restoring...`);
+      // log(`restoring...`);
       let ds = await find(dataset, { schema: srcSchema });
       let ps = ds.map(d => restore1(datasource, dataset, 
         d.sourceSchema, d.sourceTable, destSchema, d.destinationTable));
       await Promise.all(ps);
-      log(`done.`);
+      // log(`done.`);
     }
     self.restore = restore;
     
